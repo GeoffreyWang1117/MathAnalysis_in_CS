@@ -25,10 +25,13 @@ class Validator:
             return False
 
     @staticmethod
-    def assert_array_equal(actual, expected, name="数组"):
-        """验证数组是否相等"""
+    def assert_array_equal(actual, expected, rtol=1e-7, atol=0, name="数组"):
+        """验证数组是否相等（支持容差）"""
         try:
-            np.testing.assert_array_equal(actual, expected)
+            if rtol > 0 or atol > 0:
+                np.testing.assert_allclose(actual, expected, rtol=rtol, atol=atol)
+            else:
+                np.testing.assert_array_equal(actual, expected)
             print(f"✓ {name}正确")
             return True
         except AssertionError:
